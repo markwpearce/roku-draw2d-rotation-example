@@ -1,0 +1,3 @@
+sub doSomething()
+    ? "something"
+end sub

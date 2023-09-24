@@ -1,0 +1,167 @@
+class BaseNodeWrapper
+    ' I personally would prefer roSGNode to be a namespace of types
+    ' i.e: roSGNode.ContentNode
+    ' helps legibility in the case of roSGNode.Node
+    private myNode as roSGNodeNode
+
+    sub foo()
+        ' NTH: same validations of the first parameter of
+        ' createChild() as we have for CreateObject()
+        m.myNode.createChild("DoesNotExist")
+    end sub
+end class
+
+class TaskNodeWrapper extends BaseNodeWrapper
+    ' A Task node extends from Node, so it would be nice if this worked
+    private myNode as roSGNodeTask
+end class
+
+enum StatusCode
+    Ok = 200
+    BadRequest = 400
+    ServerError = 500
+    Unknown = -1
+end enum
+
+function handleResponse(response as object) as object
+    result = {
+        error: StatusCode.Unknown,
+        data: invalid
+    }
+
+    if (response.statusCode = StatusCode.ServerError)
+        ' Type StatusCode is not compatible with type StatusCode
+        result.error = StatusCode.ServerError
+    end if
+
+    return result
+end function
+
+sub callComponentFunc(instance as roSGNodeCustomComponent)
+    ' Works
+    instance@.doSomething() ' side note: can we stop sending invalid as a param here pls?
+
+    ' Doesn't work
+    instance.callFunc("doSomething")
+end sub
+
+sub nodeTypeAfterFunctionCall()
+    ' node is not roSGNodeNode by default when using CreateObject(),
+    ' so i had to add it manually but it didn't work
+    node = CreateObject("roSGNode", "Node") as roSGNodeNode
+end sub
+
+class Foo
+    ' is there a global node type? e.g: roSGNodeGlobal
+    private globalRef as roSGNodeNode
+
+    sub foo()
+        ' GetGlobalAA() probably should be typed
+        ' interface GlobalAAResult
+        '     global as roSGNode or invalid
+        ' end interface
+        m.globalRef = GetGlobalAA().global
+
+        ' at this point m.globalRef's type has changed
+        ' from roSGNodeNode to dynamic, because .global is dynamic.
+        ' That's ok for function-scoped vars, but shouldn't the class field
+        ' type definition prevail for class fields?
+    end sub
+end class
+
+class Bar
+    private node as roSGNodeNode
+
+    ' note: the "extends" link from the hover docs
+    ' is not properly formatted
+    private group as roSGNodeGroup
+
+    sub new(node as roSGNodeNode)
+        m.node = node
+        m.node.addField("name", "string", false)
+        m.node.name = "arturo"
+    end sub
+
+    sub foo()
+        ' how can i deal with fields added programatically?
+        ? m.node.name
+    end sub
+end class
+
+' ===============================================
+
+' random thought: there should be a way to incrementally
+' adopt type checks enabled per file. preferibly defining that
+' inside the file with a special comment instead of a json definition (scales ugly)
+
+' bs:enable-type-tracking -> not a lot of overhead per file
+
+' {
+'     "typeTrackingEnabled": [ -> this array will get huge the more we adopt type tracking
+'         "fileA.bs",
+'         "fileB.bs"
+'     ]
+' }
+
+' ===============================================
+
+sub anonFunc()
+    ' problem with "object" as parameter type in anon funcs
+    f = sub(input as object)
+        ? input.count()
+    end sub
+    f([1,2,3])
+end sub
+
+class Service
+    public input as object
+
+    public sub execute()
+        ? m.input
+    end sub
+end class
+
+class IHateNamingThings
+    private storeRef as roSGNodeContentNode
+    private injectedService as object
+
+    sub new(_service as Service)
+        ' shouldn't this fail because _service is not of type "object"?
+        m.injectedService = _service
+    end sub
+
+    private function getUserIdFromJwt(token as dynamic) as dynamic
+        ' error inside the function is affecting code in the if() arguments
+        if (token = invalid)
+            token = m.storeRef.token ' comment this and the error goes away
+        end if
+
+        return "abc"
+    end function
+
+    private sub useService()
+        m.injectedService.input = {}
+        m.injectedService.execute()
+    end sub
+end class
+
+' ===============================================
+' Problem i found in the promises library
+' ===============================================
+
+namespace promises
+    function on(promise as dynamic) as dynamic
+        promiseState = promise.promiseState
+
+        ' flop
+        if (promiseState = promises.internal.PromiseState.resolved)
+        end if
+        return invalid
+    end function
+end namespace
+
+' also found in the same on() function that it thinks promiseState is the enum, not the var
+' and tells you that you can't use an enum as variable. i was not able to reproduce this here
+' def install the latest bsc and bslint into the promises project
+' and check the errors, there are a bunch
+
