@@ -5,7 +5,7 @@ sub main()
   minuteHandBmp = CreateObject("roBitmap", "pkg:/images/minutehand.png")
   secondHandBmp = CreateObject("roBitmap", "pkg:/images/secondhand.png")
 
-  ' Load Audio files
+  ' Load Audio files for the ticks and tocks
   tickSound = CreateObject("roAudioResource", "pkg:/sounds/tick.wav")
   tockSound = CreateObject("roAudioResource", "pkg:/sounds/tock.wav")
 
@@ -33,8 +33,6 @@ sub main()
   inputPort = CreateObject("roMessagePort")
   screen.setMessagePort(inputPort)
 
-  ' Create an Audio player for the ticks and tocks
-  audioPlayer = CreateObject("roAudioPlayer")
   while true
     ' Check if there was any input
     inputMsg = inputPort.GetMessage()
@@ -68,7 +66,7 @@ sub main()
     screen.swapBuffers()
 
     ' Play a tick or tock sound at 80% volume
-   if seconds mod 2 = 0
+    if seconds mod 2 = 0
       tickSound.trigger(80)
     else
       tockSound.trigger(80)
