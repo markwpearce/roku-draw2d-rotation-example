@@ -8,7 +8,7 @@ In order to rotate an image from a point different than the top-left corner, you
 
 Then, apply a `pretranslation` to the region, which is basically a translation so the point of rotation would be in the top-left corner.
 
-For example, if the image (`image.png`) was 300px wide x 200px tall, and you wanted to rotate the image 180 degrees at the centre, you'd have to pretranslate by (-150, 100):
+For example, if the image (`image.png`) was 300px wide x 200px tall, and you wanted to rotate the image 180 degrees at the centre, you'd have to pretranslate by (-150, -100):
 
 ```brs
 screen = CreateObject("roScreen", 1280, 720)
