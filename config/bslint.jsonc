@@ -5,8 +5,8 @@
         "inline-if-style": "never",
         // Always use `then` in block `if` statements.
         "block-if-style": "no-then",
-        // Always group `if` statement conditions with parenthesis.
-        "condition-style": "group",
+        // Do not group `if` statement conditions with parenthesis.
+        "condition-style": "no-group",
         // Use `sub` for `Void` functions. Otherwise, use `function`.
         // For both named and anonymous functions.
         "named-function-style": "auto",

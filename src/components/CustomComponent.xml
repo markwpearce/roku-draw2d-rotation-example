@@ -1,6 +1,0 @@
-<component name="CustomComponent">
-    <script type="text/brightscript" uri="CustomComponent.bs" />
-    <interface>
-        <function name="doSomething" />
-    </interface>
-</component>

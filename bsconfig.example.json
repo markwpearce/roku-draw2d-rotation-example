@@ -1,5 +1,0 @@
-{
-    "extends": "config/bsconfig.base.json",
-    "host": "",
-    "password": ""
-}

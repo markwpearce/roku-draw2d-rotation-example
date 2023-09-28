@@ -1,3 +1,3 @@
 {
-    "brightscript.bsdk": "node_modules/.pnpm/brighterscript@0.66.0-alpha.6/node_modules/brighterscript"
+  "brightscript.bsdk": "node_modules/brighterscript"
 }

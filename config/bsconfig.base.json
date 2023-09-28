@@ -9,6 +9,7 @@
         "source/**/*",
         "components/**/*",
         "images/**/*",
+        "sounds/**/*",
         "fonts/**/*",
         "manifest"
     ],
