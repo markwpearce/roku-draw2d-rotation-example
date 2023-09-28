@@ -28,7 +28,6 @@ The example app is a clock, with hands that rotate based on the current time. Ea
 
 ![Clock Example](./docs/clock-example.jpg)
 
-
 ## Before you start
 
 1. Install the project dependencies (`npm install`) if you haven't done that yet.
@@ -54,3 +53,7 @@ The example app is a clock, with hands that rotate based on the current time. Ea
 - `lint`: Lints your source files with [`@rokucommunity/bslint`](https://github.com/rokucommunity/bslint)
 
 - `lint:fix`: Lints your source files and applies automatic fixes.
+
+## Attributions
+
+- `tick.wav` and `tock.wav` are modified from `Wall Clock Ticking.wav` by straget, from https://freesound.org/people/straget/sounds/405423/
